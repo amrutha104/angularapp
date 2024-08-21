@@ -1,5 +1,5 @@
 # Stage 1: Build the Angular app
-FROM node:18 AS build
+FROM node:14 AS build
 
 WORKDIR /app
 
@@ -33,7 +33,8 @@ FROM nginx:alpine
 # Console statement to indicate the start of the copy process
 RUN echo "Copying build files to Nginx..."
 
-COPY --from=build /app/dist/your-angular-project /usr/share/nginx/html
+# Replace 'your-angular-project' with the actual folder name in the dist directory
+COPY --from=build /app/dist/angularapp /usr/share/nginx/html
 
 # Console statement to confirm the files are copied
 RUN echo "Files copied successfully."
