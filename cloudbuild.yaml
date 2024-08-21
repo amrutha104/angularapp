@@ -1,0 +1,17 @@
+steps:
+  - name: 'gcr.io/cloud-builders/npm'
+    entrypoint: 'bash'
+    args: ['-c', 'echo "Installing npm packages..." && npm install']
+
+  - name: 'gcr.io/cloud-builders/npm'
+    entrypoint: 'bash'
+    args: ['-c', 'echo "Building the Angular app..." && npm run build -- --prod']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/united-zenith-431805-h9/cluster-angularapp', '.', '--progress=plain']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/united-zenith-431805-h9/cluster-angularapp']
+
+images:
+  - 'gcr.io/united-zenith-431805-h9/cluster-angularapp'
