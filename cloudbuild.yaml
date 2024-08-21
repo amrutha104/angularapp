@@ -1,17 +1,35 @@
 steps:
-  - name: 'gcr.io/cloud-builders/npm'
-    entrypoint: 'bash'
-    args: ['-c', 'echo "Installing npm packages..." && npm install']
-
-  - name: 'gcr.io/cloud-builders/npm'
-    entrypoint: 'bash'
-    args: ['-c', 'echo "Building the Angular app..." && npm run build -- --prod']
-
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/united-zenith-431805-h9/cluster-angularapp', '.', '--progress=plain']
-
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/united-zenith-431805-h9/cluster-angularapp']
-
+  - name: gcr.io/cloud-builders/npm
+    args:
+      - '-c'
+      - >-
+        echo "Setting environment variables..." && export
+        NODE_OPTIONS=--openssl-legacy-provider && echo "Installing npm
+        packages..." && npm install
+    dir: angularapp
+    entrypoint: bash
+  - name: gcr.io/cloud-builders/npm
+    args:
+      - '-c'
+      - >-
+        echo "Setting environment variables..." && export
+        NODE_OPTIONS=--openssl-legacy-provider && echo "Building the Angular
+        app..." && npm run build -- --prod
+    dir: angularapp
+    entrypoint: bash
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - '-t'
+      - gcr.io/united-zenith-431805-h9/cluster-angularapp
+      - .
+      - '--progress=plain'
+    dir: angularapp
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - gcr.io/united-zenith-431805-h9/cluster-angularapp
 images:
-  - 'gcr.io/united-zenith-431805-h9/cluster-angularapp'
+  - gcr.io/united-zenith-431805-h9/cluster-angularapp
+options:
+  logging: CLOUD_LOGGING_ONLY
